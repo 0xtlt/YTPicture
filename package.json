@@ -1,6 +1,6 @@
 {
   "name": "ytpicture",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "embed youtube player in picture in picture",
   "main": "App.js",
   "scripts": {
