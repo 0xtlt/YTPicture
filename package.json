@@ -1,5 +1,5 @@
 {
-  "name": "ytpicture",
+  "name": "YTPicture",
   "version": "1.0.0",
   "description": "embed youtube player in picture in picture",
   "main": "App.js",
@@ -8,7 +8,7 @@
     "dist": "electron-builder"
   },
   "build": {
-    "appId": "ytpicture",
+    "appId": "YTPicture",
     "dmg": {
       "icon": "./src/ressources/appRessources/icon.icns"
     },
@@ -22,14 +22,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ThomasT404/ytpicture.git"
+    "url": "git+https://github.com/ThomasT404/YTPicture.git"
   },
   "author": "Thomas Tastet",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ThomasT404/ytpicture/issues"
+    "url": "https://github.com/ThomasT404/YTPicture/issues"
   },
-  "homepage": "https://github.com/ThomasT404/ytpicture#readme",
+  "homepage": "https://github.com/ThomasT404/YTPicture#readme",
   "devDependencies": {
     "electron": "^8.2.1",
     "electron-builder": "^22.4.1"
