@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <title>YTPicture</title>
+    <link rel="stylesheet" href="../../node_modules/tailwindcss/dist/tailwind.min.css">
+    <style>
+        body {
+            -webkit-app-region: drag;
+        }
+
+        body label, body input, body button {
+            -webkit-app-region: no-drag
+        }
+    </style>
+</head>
+<body>
+    <div class="w-full">
+        <form class="bg-white rounded px-8 pt-6 pb-8 mb-4">
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="url">
+                    Youtube URL
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="url" type="text" placeholder="https://www.youtube.com/watch?v=WJ4yF59s7SA">
+            </div>
+            <div class="flex items-center justify-between">
+                <button id="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+                    Create
+                </button>
+                <button id="close" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+                    Close
+                </button>
+                <button id="reopen" class="opacity-50 cursor-not-allowed bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+                    Reopen
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const { ipcRenderer } = require('electron')
+
+        document.getElementById("submit").addEventListener("click", () => {
+            const url = document.getElementById("url").value;
+
+            const values = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/.exec(url);
+
+            if(values) {
+                let endUrl = values[5] + (values[6] ? values[6].replace("&", "?") : "");
+
+                ipcRenderer.send('play', endUrl);
+            } else {
+                alert("bad url")
+            }
+        })
+
+        document.getElementById("reopen").addEventListener("click", () =>{
+            ipcRenderer.send('reopen', true);
+        })
+
+        document.getElementById("close").addEventListener("click", () =>{
+            ipcRenderer.send('quit', true);
+        })
+
+        ipcRenderer.on("status", (event, data) => {
+            if(data) {
+                document.getElementById("reopen").classList.remove("opacity-50", "cursor-not-allowed")
+            } else {
+                document.getElementById("reopen").classList.add("opacity-50", "cursor-not-allowed")
+            }
+        })
+    </script>
+</body>
+</html>
