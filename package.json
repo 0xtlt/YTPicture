@@ -35,6 +35,7 @@
     "electron-builder": "^22.4.1"
   },
   "dependencies": {
+    "electron-builder-squirrel-windows": "^22.5.1",
     "tailwindcss": "^1.2.0"
   }
 }
