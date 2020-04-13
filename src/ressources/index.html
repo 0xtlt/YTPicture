@@ -23,7 +23,7 @@
         <form class="bg-white rounded px-8 pt-6 pb-8 mb-4">
             <div class="mb-6">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="url">
-                    Youtube URL
+                    Youtube / Twitch URL
                 </label>
                 <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="url" type="text" placeholder="https://www.youtube.com/watch?v=WJ4yF59s7SA">
             </div>
@@ -46,13 +46,23 @@
 
         document.getElementById("submit").addEventListener("click", () => {
             const url = document.getElementById("url").value;
+            let type = "youtube";
 
-            const values = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/.exec(url);
+            let values = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/.exec(url);
+
+            if(!values){
+                //Twitch
+                type = "twitch";
+                values = /^https:\/\/(www\.)?twitch\.tv\/(([a-zA-Z0-9_])+)/.exec(url);
+            }
+
+
 
             if(values) {
-                let endUrl = values[5] + (values[6] ? values[6].replace("&", "?") : "");
-
-                ipcRenderer.send('play', endUrl);
+                ipcRenderer.send('play', {
+                    type,
+                    values
+                });
             } else {
                 alert("bad url")
             }

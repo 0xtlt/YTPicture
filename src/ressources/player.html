@@ -42,13 +42,61 @@
         }
 
         .controls img {
-            width: 70px;
-            height: 70px;
+            width: 50px;
+            height: 50px;
             object-fit: contain;
+        }
+
+        .topBorder {
+            background: transparent;
+            width: 100%;
+            height: 20px;
+            position: fixed;
+            z-index: 5;
+            top: 0;
+            left: 0;
+        }
+
+        .bottomBorder {
+            background: transparent;
+            width: 100%;
+            height: 20px;
+            position: fixed;
+            z-index: 5;
+            bottom: 0;
+            left: 0;
+        }
+
+        .leftBorder {
+            background: transparent;
+            height: 100%;
+            width: 20px;
+            position: fixed;
+            z-index: 5;
+            top: 0;
+            left: 0;
+        }
+
+        .rightBorder {
+            background: transparent;
+            height: 100%;
+            width: 20px;
+            position: fixed;
+            z-index: 5;
+            top: 0;
+            right: 0;
+        }
+
+        body.disableTwitch .topBorder, body.disableTwitch .rightBorder, body.disableTwitch .leftBorder, body.disableTwitch .bottomBorder {
+            display: none !important;
         }
     </style>
 </head>
 <body>
+    <div class="topBorder"></div>
+    <div class="leftBorder"></div>
+    <div class="rightBorder"></div>
+    <div class="bottomBorder"></div>
     <iframe id="video" src="https://www.youtube.com/embed/" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope;" allowfullscreen></iframe>
     <div class="controls">
         <button id="mini"><img src="./icons/minimize.svg" /></button>
@@ -59,8 +107,21 @@
         const { ipcRenderer } = require('electron')
 
         ipcRenderer.on('url' , (event , data) => {
-            let src = `https://www.youtube.com/embed/${data}`;
-            src += src.includes("?") ? "&autoplay=1" : "?autoplay=1"
+            let src = "";
+
+            if(data.type === "twitch"){
+                document.body.classList.remove("disableTwitch");
+            } else {
+                document.body.classList.add("disableTwitch");
+            }
+
+            if(data.type === "youtube"){
+                let endUrl = data.values[5] + (data.values[6] ? data.values[6].replace("&", "?") : "");
+                src = `https://www.youtube.com/embed/${endUrl}`;
+                src += src.includes("?") ? "&autoplay=1" : "?autoplay=1"
+            } else if(data.type === "twitch"){
+                src = `https://player.twitch.tv/?channel=${data.values[2]}&enableExtensions=true&muted=false&player=popout&volume=1`
+            }
 
             document.getElementById("video").setAttribute("src", src)
         });
